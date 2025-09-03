@@ -247,11 +247,20 @@ org.apache.tomcat.util.net.NioEndpoint.level = FINE
 
 ## Update Protocol
 
-### When to Update This Cache
+### Automated Self-Improvement System
+The `/improve-yourself` command systematically updates this cache:
+- **Session Analysis**: Reviews git history, uncommitted changes, and conversation context
+- **Pattern Recognition**: Identifies recurring issues, solutions, and optimization opportunities  
+- **Documentation Updates**: Updates all AI documentation files with new insights
+- **Cross-Reference Validation**: Ensures consistency across documentation files
+
+### Manual Update Triggers
 1. **New recurring issues** discovered during development
 2. **Performance bottlenecks** identified and resolved
 3. **Team decisions** on coding standards or patterns
 4. **Environmental quirks** specific to build/deployment
+5. **Build system changes** or dependency updates
+6. **New debugging techniques** or tools discovered
 
 ### Self-Improvement Checklist
 Before completing any task:
@@ -259,3 +268,11 @@ Before completing any task:
 - [ ] Note useful debugging techniques discovered  
 - [ ] Record environment-specific solutions
 - [ ] Update patterns that differ from documentation
+- [ ] Capture new command combinations or workflows
+- [ ] Record performance insights or optimization opportunities
+
+### Recent Improvements Captured (2025-01-03)
+- **Command Structure**: Restored essential build commands in CLAUDE.md
+- **Self-Improvement Protocol**: Documented automated improvement workflow
+- **Context7 Integration**: Enhanced external documentation resource usage
+- **Session Learning**: Improved cross-session knowledge retention

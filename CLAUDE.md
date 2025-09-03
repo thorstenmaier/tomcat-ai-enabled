@@ -1,7 +1,7 @@
+
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-Also check @README.md
 
 ## Project Overview
 
@@ -174,11 +174,22 @@ Runtime configuration:
 - Background Tomcat processes can be managed with process IDs from `lsof` output
 
 ### Self-Improvement Protocol
+
+#### Automated Self-Improvement Command
+The `/improve-yourself` command implements systematic documentation updates:
+- **Usage**: Run periodically or after significant development sessions
+- **Purpose**: Capture new insights, patterns, and troubleshooting knowledge
+- **Scope**: Updates all AI documentation files with session learnings
+- **Frequency**: Recommended after major debugging, performance work, or when discovering new patterns
+
+#### Manual Self-Improvement Checklist
 Before completing any task, check for:
 1. **Repeated issues** that could be documented (e.g., JAVA_HOME problems, port conflicts)
 2. **Project-specific patterns** not in standard documentation (e.g., SDKMAN paths)
 3. **Useful command combinations** discovered during work
 4. **Environment quirks** that affect builds or runtime
+5. **New debugging techniques** or performance optimizations
+6. **Updated dependencies** or configuration changes
 
 Update this file proactively when encountering new patterns or solutions.
 
@@ -231,18 +242,35 @@ Server (org.apache.catalina.Server)
 | Expression Language | `java/org/apache/el/` |
 | JNDI Implementation | `java/org/apache/naming/` |
 
-### AI Assistant Documentation
-Comprehensive navigation guides are available in `docs/ai-assistant/`:
-- **[🏗️ Architecture Overview](docs/ai-assistant/architecture.md)** - System design and component relationships
-- **[🌐 Domain Maps](docs/ai-assistant/domains/)** - Functional area deep dives (10 domains)
-- **[🔧 Services Registry](docs/ai-assistant/services/)** - Component catalog and interactions
-- **[📝 Code Patterns](docs/ai-assistant/patterns.md)** - Tomcat-specific coding patterns
-- **[🔍 Search Hints](docs/ai-assistant/search-hints.md)** - Concept-to-file quick reference
-- **[🗂️ Indexes](docs/ai-assistant/indexes/)** - API endpoints, class hierarchies, dependencies
-- **[🧠 Memory Cache](docs/ai-assistant/memory/)** - Hotspots, patterns, troubleshooting
-- **[🗺️ Semantic Maps](docs/ai-assistant/semantic/)** - Conceptual navigation and relationships
-- **[🧪 Testing Guide](docs/ai-assistant/testing.md)** - Comprehensive testing strategies
-- **[🚀 Development Workflow](docs/ai-assistant/workflow.md)** - Development best practices
+### Dynamic Context Loading
+**IMPORTANT**: Load additional documentation files on demand to optimize context usage. Use the Read tool to load these files only when needed:
+
+#### Context-Specific Loading Rules
+- **Architecture questions**: Load `docs/ai-assistant/architecture.md`
+- **Domain-specific work**: Load relevant file from `docs/ai-assistant/domains/` (connector, security, lifecycle, etc.)
+- **Service interactions**: Load `docs/ai-assistant/services/` files
+- **Code pattern questions**: Load `docs/ai-assistant/patterns.md`
+- **Search/navigation help**: Load `docs/ai-assistant/search-hints.md`  
+- **API/class lookup**: Load relevant files from `docs/ai-assistant/indexes/`
+- **Performance/memory issues**: Load relevant files from `docs/ai-assistant/memory/`
+- **Conceptual navigation**: Load files from `docs/ai-assistant/semantic/`
+- **Testing issues**: Load `docs/ai-assistant/testing.md`
+- **Development workflow**: Load `docs/ai-assistant/workflow.md`
+
+#### Available Documentation Structure
+```
+docs/ai-assistant/
+├── architecture.md           # System design & component relationships
+├── domains/                  # Functional area deep dives (10 domains)
+├── services/                 # Component catalog & interactions  
+├── patterns.md              # Tomcat-specific coding patterns
+├── search-hints.md          # Concept-to-file quick reference
+├── indexes/                 # API endpoints, class hierarchies, dependencies
+├── memory/                  # Hotspots, patterns, troubleshooting
+├── semantic/                # Conceptual navigation & relationships
+├── testing.md               # Comprehensive testing strategies
+└── workflow.md              # Development best practices
+```
 
 ### Common Issues & Quick Fixes
 - **Port 8080 in use**: `lsof -i :8080` then `kill <PID>`
@@ -260,9 +288,25 @@ Comprehensive navigation guides are available in `docs/ai-assistant/`:
 
 ## External Documentation Resources
 
-### Context7 MCP Server
+### Context7 MCP Server Integration
 The Context7 MCP server provides extensive Apache Tomcat documentation access:
+
+#### Connection Details
 - **Library ID**: `/websites/tomcat_apache_tomcat-10_1-doc` (31,279 code snippets)
+- **Tool**: `mcp__context7__get-library-docs`
 - **Coverage**: API docs, configuration examples, build system, lifecycle management, clustering, connection pooling, WebSocket support, Windows service management
-- **Usage**: Query specific Tomcat topics like session management, security configuration, performance tuning, custom valve development, servlet container internals
-- **Access**: Use `mcp__context7__get-library-docs` with the library ID to retrieve documentation on specific topics
+
+#### Usage Patterns
+- **Architecture Questions**: Query component interactions, design patterns, lifecycle management
+- **Configuration Issues**: Retrieve specific configuration examples and best practices
+- **Performance Tuning**: Access performance optimization guides and tuning parameters
+- **Security Configuration**: Get security-related configuration and implementation details
+- **Custom Development**: Find examples for custom valve, realm, or manager implementations
+
+#### Integration Workflow
+1. **Research Phase**: Use Context7 for comprehensive background on Tomcat features
+2. **Implementation Phase**: Query specific APIs and implementation patterns
+3. **Configuration Phase**: Retrieve configuration examples and best practices
+4. **Troubleshooting**: Access diagnostic guides and common issue resolutions
+
+**Access Pattern**: `mcp__context7__get-library-docs` with library ID and specific topic query
