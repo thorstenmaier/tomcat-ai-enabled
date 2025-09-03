@@ -1,3 +1,4 @@
+
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
@@ -174,11 +175,22 @@ Runtime configuration:
 - Background Tomcat processes can be managed with process IDs from `lsof` output
 
 ### Self-Improvement Protocol
+
+#### Automated Self-Improvement Command
+The `/improve-yourself` command implements systematic documentation updates:
+- **Usage**: Run periodically or after significant development sessions
+- **Purpose**: Capture new insights, patterns, and troubleshooting knowledge
+- **Scope**: Updates all AI documentation files with session learnings
+- **Frequency**: Recommended after major debugging, performance work, or when discovering new patterns
+
+#### Manual Self-Improvement Checklist
 Before completing any task, check for:
 1. **Repeated issues** that could be documented (e.g., JAVA_HOME problems, port conflicts)
 2. **Project-specific patterns** not in standard documentation (e.g., SDKMAN paths)
 3. **Useful command combinations** discovered during work
 4. **Environment quirks** that affect builds or runtime
+5. **New debugging techniques** or performance optimizations
+6. **Updated dependencies** or configuration changes
 
 Update this file proactively when encountering new patterns or solutions.
 
@@ -260,9 +272,25 @@ Comprehensive navigation guides are available in `docs/ai-assistant/`:
 
 ## External Documentation Resources
 
-### Context7 MCP Server
+### Context7 MCP Server Integration
 The Context7 MCP server provides extensive Apache Tomcat documentation access:
+
+#### Connection Details
 - **Library ID**: `/websites/tomcat_apache_tomcat-10_1-doc` (31,279 code snippets)
+- **Tool**: `mcp__context7__get-library-docs`
 - **Coverage**: API docs, configuration examples, build system, lifecycle management, clustering, connection pooling, WebSocket support, Windows service management
-- **Usage**: Query specific Tomcat topics like session management, security configuration, performance tuning, custom valve development, servlet container internals
-- **Access**: Use `mcp__context7__get-library-docs` with the library ID to retrieve documentation on specific topics
+
+#### Usage Patterns
+- **Architecture Questions**: Query component interactions, design patterns, lifecycle management
+- **Configuration Issues**: Retrieve specific configuration examples and best practices
+- **Performance Tuning**: Access performance optimization guides and tuning parameters
+- **Security Configuration**: Get security-related configuration and implementation details
+- **Custom Development**: Find examples for custom valve, realm, or manager implementations
+
+#### Integration Workflow
+1. **Research Phase**: Use Context7 for comprehensive background on Tomcat features
+2. **Implementation Phase**: Query specific APIs and implementation patterns
+3. **Configuration Phase**: Retrieve configuration examples and best practices
+4. **Troubleshooting**: Access diagnostic guides and common issue resolutions
+
+**Access Pattern**: `mcp__context7__get-library-docs` with library ID and specific topic query

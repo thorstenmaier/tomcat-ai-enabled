@@ -545,12 +545,31 @@ public void invoke(Request request, Response response)
 
 ### Documentation Updates
 
-#### When to Update Documentation
+#### AI Documentation Self-Improvement
+The `/improve-yourself` command provides systematic documentation updates:
+
+**Usage Scenarios**:
+- After completing significant debugging sessions
+- Following performance optimization work  
+- When discovering new patterns or architectural insights
+- After resolving environment-specific issues
+- Periodically to capture accumulated session knowledge
+
+**Process**:
+1. **Session Analysis**: Reviews git history, changes, and conversation context
+2. **Gap Identification**: Compares session learnings with existing documentation
+3. **Systematic Updates**: Updates CLAUDE.md, memory cache, troubleshooting guides
+4. **Cross-Reference Validation**: Ensures consistency across all documentation files
+
+#### Manual Documentation Updates
+When to Update Documentation:
 1. **API Changes**: New methods, changed signatures
 2. **Configuration Changes**: New attributes, changed defaults
 3. **Behavior Changes**: Different functionality
 4. **Performance Improvements**: Significant optimizations
 5. **Bug Fixes**: If behavior changes
+6. **Build Process Changes**: New commands, dependency updates
+7. **Environment-Specific Solutions**: Platform or tooling quirks
 
 #### Documentation Locations
 ```bash
