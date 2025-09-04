@@ -173,6 +173,54 @@ Runtime configuration:
 - For faster builds, avoid `ant clean` unless necessary
 - Background Tomcat processes can be managed with process IDs from `lsof` output
 
+### Agent Usage Best Practices
+
+Based on proven strategies for effective sub-agent usage:
+
+#### Core Principles
+1. **Agents as Researchers** - Sub-agents should analyze and plan, NOT implement
+2. **File-Based Context Sharing** - Use markdown files in `docs/claude/` for persistent context
+3. **Parent Agent Implementation** - The main agent maintains full context for bug fixing
+4. **Clear Handoffs** - Agents provide file paths to their research reports
+
+#### Effective Agent Workflow
+```
+1. Parent creates context file: docs/claude/tasks/context-session.md
+2. Sub-agent reads context → researches → saves report → updates context  
+3. Parent reads report → implements solution with full context
+4. Iterate with shared context preserved across sessions
+```
+
+#### Context Management Strategy
+- **Task Context**: `docs/claude/tasks/context-session.md` - Current project state
+- **Research Reports**: `docs/claude/research/[type]-[timestamp].md` - Detailed analysis
+- **Shared Knowledge**: Persistent files prevent context loss between agent calls
+
+#### When to Use Sub-Agents
+✅ **Good Use Cases:**
+- Complex codebase exploration requiring extensive file reading
+- Dependency analysis across multiple components
+- Test planning and coverage assessment
+- Code validation and pattern checking
+- Documentation research and best practice gathering
+
+❌ **Avoid Using Agents For:**
+- Simple file edits or straightforward implementations
+- Single-file operations  
+- Tasks requiring continuous iteration and debugging
+- Direct code execution or testing
+
+#### Agent Communication Pattern
+Sub-agents should ALWAYS end with:
+```
+I've completed the [analysis type] and saved the detailed report to:
+`docs/claude/research/[report-type]-[timestamp].md`
+
+Please read this file for complete findings before proceeding.
+
+Summary: [1-2 sentence key findings]
+```
+
 ### Self-Improvement Protocol
 
 #### Automated Self-Improvement Command
