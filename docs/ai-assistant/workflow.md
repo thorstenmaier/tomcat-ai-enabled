@@ -621,6 +621,14 @@ ant clean test
 4. **Performance testing** for critical paths
 5. **Documentation updates** for user-facing changes
 
+#### Documentation Creation Process
+1. **Use TodoWrite for complex documentation tasks** - Track progress across multiple files
+2. **Leverage research-context-optimizer agent** for comprehensive domain analysis
+3. **Follow consistent structure** - Purpose, Architecture, Components, Entry Points, etc.
+4. **Research first, implement second** - Use agents for research, parent for implementation
+5. **Cross-reference related domains** - Ensure domains link to each other appropriately
+6. **Commit documentation in logical chunks** - Group related documentation updates
+
 #### Collaboration
 1. **Communicate early** about significant changes
 2. **Ask questions** when unsure about design decisions

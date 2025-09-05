@@ -196,6 +196,12 @@ Based on proven strategies for effective sub-agent usage:
 - **Research Reports**: `docs/claude/research/[type]-[timestamp].md` - Detailed analysis
 - **Shared Knowledge**: Persistent files prevent context loss between agent calls
 
+#### Task Management with TodoWrite
+- **Multi-step Documentation**: Use TodoWrite to track progress across complex documentation tasks
+- **Domain Research**: Break down research into discrete, trackable items (analyze, research, create, verify)
+- **Status Tracking**: Mark tasks as in_progress before starting, completed immediately after finishing
+- **Parallel Planning**: Plan all subtasks upfront to maintain clear project scope
+
 #### When to Use Sub-Agents
 ✅ **Good Use Cases:**
 - Complex codebase exploration requiring extensive file reading
@@ -203,6 +209,7 @@ Based on proven strategies for effective sub-agent usage:
 - Test planning and coverage assessment
 - Code validation and pattern checking
 - Documentation research and best practice gathering
+- **Domain Documentation Research**: Use research-context-optimizer for comprehensive domain analysis
 
 ❌ **Avoid Using Agents For:**
 - Simple file edits or straightforward implementations
@@ -295,7 +302,8 @@ Server (org.apache.catalina.Server)
 
 #### Context-Specific Loading Rules
 - **Architecture questions**: Load `docs/ai-assistant/architecture.md`
-- **Domain-specific work**: Load relevant file from `docs/ai-assistant/domains/` (connector, security, lifecycle, etc.)
+- **Domain-specific work**: Load relevant file from `docs/ai-assistant/domains/` 
+  - All 10 core domains now fully documented: request-processing, security, session-management, webapp-deployment, network-io, jsp-el, clustering, resource-management, configuration, monitoring
 - **Service interactions**: Load `docs/ai-assistant/services/` files
 - **Code pattern questions**: Load `docs/ai-assistant/patterns.md`
 - **Search/navigation help**: Load `docs/ai-assistant/search-hints.md`  
