@@ -2,7 +2,6 @@
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-Also check @README.md
 
 ## Project Overview
 
@@ -174,6 +173,61 @@ Runtime configuration:
 - For faster builds, avoid `ant clean` unless necessary
 - Background Tomcat processes can be managed with process IDs from `lsof` output
 
+### Agent Usage Best Practices
+
+Based on proven strategies for effective sub-agent usage:
+
+#### Core Principles
+1. **Agents as Researchers** - Sub-agents should analyze and plan, NOT implement
+2. **File-Based Context Sharing** - Use markdown files in `docs/claude/` for persistent context
+3. **Parent Agent Implementation** - The main agent maintains full context for bug fixing
+4. **Clear Handoffs** - Agents provide file paths to their research reports
+
+#### Effective Agent Workflow
+```
+1. Parent creates context file: docs/claude/tasks/context-session.md
+2. Sub-agent reads context → researches → saves report → updates context  
+3. Parent reads report → implements solution with full context
+4. Iterate with shared context preserved across sessions
+```
+
+#### Context Management Strategy
+- **Task Context**: `docs/claude/tasks/context-session.md` - Current project state
+- **Research Reports**: `docs/claude/research/[type]-[timestamp].md` - Detailed analysis
+- **Shared Knowledge**: Persistent files prevent context loss between agent calls
+
+#### Task Management with TodoWrite
+- **Multi-step Documentation**: Use TodoWrite to track progress across complex documentation tasks
+- **Domain Research**: Break down research into discrete, trackable items (analyze, research, create, verify)
+- **Status Tracking**: Mark tasks as in_progress before starting, completed immediately after finishing
+- **Parallel Planning**: Plan all subtasks upfront to maintain clear project scope
+
+#### When to Use Sub-Agents
+✅ **Good Use Cases:**
+- Complex codebase exploration requiring extensive file reading
+- Dependency analysis across multiple components
+- Test planning and coverage assessment
+- Code validation and pattern checking
+- Documentation research and best practice gathering
+- **Domain Documentation Research**: Use research-context-optimizer for comprehensive domain analysis
+
+❌ **Avoid Using Agents For:**
+- Simple file edits or straightforward implementations
+- Single-file operations  
+- Tasks requiring continuous iteration and debugging
+- Direct code execution or testing
+
+#### Agent Communication Pattern
+Sub-agents should ALWAYS end with:
+```
+I've completed the [analysis type] and saved the detailed report to:
+`docs/claude/research/[report-type]-[timestamp].md`
+
+Please read this file for complete findings before proceeding.
+
+Summary: [1-2 sentence key findings]
+```
+
 ### Self-Improvement Protocol
 
 #### Automated Self-Improvement Command
@@ -243,18 +297,36 @@ Server (org.apache.catalina.Server)
 | Expression Language | `java/org/apache/el/` |
 | JNDI Implementation | `java/org/apache/naming/` |
 
-### AI Assistant Documentation
-Comprehensive navigation guides are available in `docs/ai-assistant/`:
-- **[🏗️ Architecture Overview](docs/ai-assistant/architecture.md)** - System design and component relationships
-- **[🌐 Domain Maps](docs/ai-assistant/domains/)** - Functional area deep dives (10 domains)
-- **[🔧 Services Registry](docs/ai-assistant/services/)** - Component catalog and interactions
-- **[📝 Code Patterns](docs/ai-assistant/patterns.md)** - Tomcat-specific coding patterns
-- **[🔍 Search Hints](docs/ai-assistant/search-hints.md)** - Concept-to-file quick reference
-- **[🗂️ Indexes](docs/ai-assistant/indexes/)** - API endpoints, class hierarchies, dependencies
-- **[🧠 Memory Cache](docs/ai-assistant/memory/)** - Hotspots, patterns, troubleshooting
-- **[🗺️ Semantic Maps](docs/ai-assistant/semantic/)** - Conceptual navigation and relationships
-- **[🧪 Testing Guide](docs/ai-assistant/testing.md)** - Comprehensive testing strategies
-- **[🚀 Development Workflow](docs/ai-assistant/workflow.md)** - Development best practices
+### Dynamic Context Loading
+**IMPORTANT**: Load additional documentation files on demand to optimize context usage. Use the Read tool to load these files only when needed:
+
+#### Context-Specific Loading Rules
+- **Architecture questions**: Load `docs/ai-assistant/architecture.md`
+- **Domain-specific work**: Load relevant file from `docs/ai-assistant/domains/` 
+  - All 10 core domains now fully documented: request-processing, security, session-management, webapp-deployment, network-io, jsp-el, clustering, resource-management, configuration, monitoring
+- **Service interactions**: Load `docs/ai-assistant/services/` files
+- **Code pattern questions**: Load `docs/ai-assistant/patterns.md`
+- **Search/navigation help**: Load `docs/ai-assistant/search-hints.md`  
+- **API/class lookup**: Load relevant files from `docs/ai-assistant/indexes/`
+- **Performance/memory issues**: Load relevant files from `docs/ai-assistant/memory/`
+- **Conceptual navigation**: Load files from `docs/ai-assistant/semantic/`
+- **Testing issues**: Load `docs/ai-assistant/testing.md`
+- **Development workflow**: Load `docs/ai-assistant/workflow.md`
+
+#### Available Documentation Structure
+```
+docs/ai-assistant/
+├── architecture.md           # System design & component relationships
+├── domains/                  # Functional area deep dives (10 domains)
+├── services/                 # Component catalog & interactions  
+├── patterns.md              # Tomcat-specific coding patterns
+├── search-hints.md          # Concept-to-file quick reference
+├── indexes/                 # API endpoints, class hierarchies, dependencies
+├── memory/                  # Hotspots, patterns, troubleshooting
+├── semantic/                # Conceptual navigation & relationships
+├── testing.md               # Comprehensive testing strategies
+└── workflow.md              # Development best practices
+```
 
 ### Common Issues & Quick Fixes
 - **Port 8080 in use**: `lsof -i :8080` then `kill <PID>`
