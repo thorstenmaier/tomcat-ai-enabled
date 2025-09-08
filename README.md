@@ -1,79 +1,142 @@
-## Welcome to Apache Tomcat!
+# AI-Enabled Apache Tomcat Repository
 
-### What Is It?
+## Purpose
 
-The Apache Tomcat® software is an open source implementation of the Jakarta
-Servlet, Jakarta Pages, Jakarta Expression Language and Jakarta WebSocket
-technologies. The Jakarta Servlet, Jakarta Pages, Jakarta Expression Language and
-Jakarta WebSocket specifications are developed as part of the
-[Jakarta EE Platform](https://jakarta.ee/specifications/).
+This repository is **not** the standard Apache Tomcat codebase. Instead, it's an experimental environment designed to explore and demonstrate how AI agents can effectively navigate and work with large, complex codebases. Using Apache Tomcat 12.0 as the foundation (with its ~726,745 lines of code), this repository has been enhanced with AI-specific documentation and configurations to enable intelligent code navigation and understanding.
 
-The Apache Tomcat software is developed in an open and participatory
-environment and released under the
-[Apache License version 2](https://www.apache.org/licenses/). The Apache Tomcat
-project is intended to be a collaboration of the best-of-breed developers from
-around the world. We invite you to participate in this open development
-project. To learn more about getting involved,
-[click here](https://tomcat.apache.org/getinvolved.html) or keep reading.
+## What Has Been AI-Enabled?
 
-Apache Tomcat software powers numerous large-scale, mission-critical web
-applications across a diverse range of industries and organizations. Some of
-these users and their stories are listed on the
-[PoweredBy wiki page](https://cwiki.apache.org/confluence/display/TOMCAT/PoweredBy).
+This repository contains the complete Apache Tomcat 12.0 source code, augmented with:
 
-Apache Tomcat, Tomcat, Apache, the Apache feather, and the Apache Tomcat
-project logo are trademarks of the Apache Software Foundation.
+### 1. AI Assistant Documentation (`CLAUDE.md`)
+A comprehensive guide specifically designed for Claude Code (claude.ai/code) that includes:
+- **Build system commands** and environment-specific configurations
+- **Architecture overview** with component hierarchy and request processing flows
+- **Dynamic context loading** rules to optimize token usage
+- **Self-improvement protocol** for capturing and documenting new patterns
+- **Performance hotspots** and common issues with quick fixes
+- **Knowledge base** for future sessions including macOS/SDKMAN specifics
 
-### Get It
+### 2. Structured AI Navigation System (`docs/ai-assistant/`)
+A comprehensive documentation structure helping AI agents understand the codebase:
 
-For every major Tomcat version there is one download page containing
-links to the latest binary and source code downloads, but also
-links for browsing the download directories and archives:
-- [Tomcat 11](https://tomcat.apache.org/download-11.cgi)
-- [Tomcat 10](https://tomcat.apache.org/download-10.cgi)
-- [Tomcat 9](https://tomcat.apache.org/download-90.cgi)
+#### Domain Documentation (10 core domains)
+- Request Processing, Security, Session Management
+- Web Application Deployment, Network I/O, JSP/Expression Language
+- Clustering, Resource Management, Configuration, Monitoring
 
-To facilitate choosing the right major Tomcat version one, we have provided a
-[version overview page](https://tomcat.apache.org/whichversion.html).
+#### Technical Indexes
+- **API Endpoints** - Servlet mappings and REST endpoints
+- **Class Hierarchies** - Component inheritance structures
+- **Service Registry** - Component interactions and dependencies
+- **Semantic Code Map** - Conceptual navigation paths
 
-### Documentation
+#### Development Support
+- **Patterns** - Tomcat-specific coding patterns and conventions
+- **Testing** - Comprehensive testing strategies and frameworks
+- **Workflow** - Development best practices and processes
+- **Search Hints** - Concept-to-file quick reference
+- **Memory Cache** - Performance hotspots and troubleshooting
 
-The documentation available as of the date of this release is
-included in the docs webapp which ships with tomcat. You can access that webapp
-by starting tomcat and visiting <http://localhost:8080/docs/> in your browser.
-The most up-to-date documentation for each version can be found at:
+### 3. Custom AI Agents (`.claude/agents/`)
+Specialized sub-agents for complex tasks:
+- **test-orchestrator** - Intelligently selects minimal test suites based on code changes
+- **dependency-analyzer** - Analyzes component dependencies and impact of changes
+- **code-validator** - Performs comprehensive code validation including style and security
+- **research-context-optimizer** - Focused research without flooding the context window
+
+### 4. Custom Commands (`.claude/commands/`)
+AI-specific commands to streamline common workflows:
+- **/improve-yourself** - Systematic self-improvement protocol that analyzes session activities and updates AI documentation with new insights
+- **/start-tomcat** - Automated Tomcat startup with git status check, port conflict resolution, and SDKMAN Java configuration
+
+### 5. MCP Server Integration
+- **Context7 Integration** - Access to 31,279 Tomcat documentation snippets
+- **Library ID**: `/websites/tomcat_apache_tomcat-10_1-doc`
+- Provides API docs, configuration examples, and best practices
+
+### 6. Agent Communication Patterns
+Established workflows for effective agent collaboration:
+- **File-based context sharing** via `docs/claude/` directory
+- **Research reports** saved as persistent markdown files
+- **Task context** preserved across agent sessions
+- **Clear handoff protocols** between parent and sub-agents
+
+## How This Helps AI Agents
+
+1. **Context Optimization**: Dynamic loading of relevant documentation reduces token usage
+2. **Rapid Navigation**: Semantic maps and search hints enable quick file location
+3. **Pattern Recognition**: Documented Tomcat-specific patterns prevent common mistakes
+4. **Persistent Learning**: Self-improvement protocol captures new insights
+5. **Specialized Workflows**: Sub-agents handle complex analysis without context overflow
+6. **Environment Awareness**: Specific configurations for macOS, SDKMAN, and common issues
+
+## Original Apache Tomcat Information
+
+Apache Tomcat® is an open source implementation of the Jakarta Servlet, Jakarta Pages, Jakarta Expression Language and Jakarta WebSocket technologies, developed under the [Apache License version 2](https://www.apache.org/licenses/).
+
+For standard Tomcat documentation, visit:
 - [Tomcat 11](https://tomcat.apache.org/tomcat-11.0-doc/)
 - [Tomcat 10](https://tomcat.apache.org/tomcat-10.1-doc/)
 - [Tomcat 9](https://tomcat.apache.org/tomcat-9.0-doc/)
 
-### Installation
+Apache Tomcat, Tomcat, Apache, the Apache feather, and the Apache Tomcat project logo are trademarks of the Apache Software Foundation.
 
-Please see [RUNNING.txt](RUNNING.txt) for more info.
+## Quick Start for AI Agents
 
-### Licensing
+### Building and Running
+```bash
+# Build Tomcat
+ant deploy
 
-Please see [LICENSE](LICENSE) for more info.
+# For macOS with SDKMAN
+export JAVA_HOME=~/.sdkman/candidates/java/current
+./output/build/bin/catalina.sh run
 
-### Support and Mailing List Information
+# Check for port conflicts
+lsof -i :8080 -i :8005 | grep LISTEN
+```
 
-* Free community support is available through the
-[tomcat-users](https://tomcat.apache.org/lists.html#tomcat-users) email list and
-a dedicated [IRC channel](https://tomcat.apache.org/irc.html) (#tomcat on
-Freenode).
+### Key Files for AI Navigation
+- **CLAUDE.md** - Primary AI assistant guide
+- **docs/ai-assistant/** - Structured navigation documentation
+- **.claude/agents/** - Custom agent configurations
+- **docs/claude/** - Shared context and research reports
 
-* If you want freely available support for running Apache Tomcat, please see the
-resources page [here](https://tomcat.apache.org/findhelp.html).
+### Using the AI Enhancements
 
-* If you want to be informed about new code releases, bug fixes,
-security fixes, general news and information about Apache Tomcat, please
-subscribe to the
-[tomcat-announce](https://tomcat.apache.org/lists.html#tomcat-announce) email
-list.
+1. **Start with CLAUDE.md** - Contains essential commands and project overview
+2. **Load domain docs on demand** - Use Read tool for specific domains when needed
+3. **Leverage sub-agents** - Use Task tool for complex research or analysis
+4. **Maintain context** - Save research to `docs/claude/` for persistence
+5. **Use MCP for docs** - Query Context7 for official Tomcat documentation
 
-* If you have a concrete bug report for Apache Tomcat, please see the
-instructions for reporting a bug
-[here](https://tomcat.apache.org/bugreport.html).
+## Repository Statistics
 
-### Contributing
+- **Total Lines**: ~726,745 (580,174 main + 146,571 tests)
+- **Java Files**: 2,732
+- **AI Documentation**: 22 specialized markdown files
+- **Custom Agents**: 4 specialized sub-agents
+- **MCP Documentation**: 31,279 code snippets available
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for more info.
+## Learning and Contribution
+
+This repository serves as a living example of how to make large codebases AI-friendly. Key innovations include:
+
+- **Dynamic context management** to work within token limits
+- **Semantic navigation** for conceptual code exploration
+- **Agent collaboration patterns** for complex tasks
+- **Self-improvement protocols** for continuous learning
+- **Environment-specific adaptations** for real-world development
+
+## License and Attribution
+
+- Apache Tomcat source code: [Apache License version 2](https://www.apache.org/licenses/)
+- AI enhancements and documentation: Experimental additions for AI navigation research
+- Original Tomcat project: [Apache Software Foundation](https://tomcat.apache.org/)
+
+## Further Information
+
+- [Original CONTRIBUTING guide](CONTRIBUTING.md)
+- [Original RUNNING instructions](RUNNING.txt)
+- [Apache Tomcat official site](https://tomcat.apache.org/)
