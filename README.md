@@ -53,7 +53,11 @@ Starting with a traditional codebase, we've added layers of AI-enabling infrastr
 
 ### 1. The Primary Interface: CLAUDE.md
 
-Every AI agent needs an entry point—a comprehensive yet concise guide to the repository. `CLAUDE.md` serves as this primary interface, containing:
+**The Challenge**: AI agents entering a 726,745-line codebase are like tourists dropped in Tokyo without a map—overwhelmed and lost. Traditional READMEs are written for humans who can infer context, but AI agents need explicit navigation instructions and operational knowledge to be effective.
+
+**The Solution**: We created CLAUDE.md as the single source of truth for AI agents—a carefully crafted entry point that provides just enough context to navigate the entire codebase without overwhelming the limited context window. This file acts as the AI's operational manual, teaching it not just what the code does, but how to work with it effectively.
+
+`CLAUDE.md` serves as this primary interface, containing:
 
 - **Essential commands** for building, testing, and running the application
 - **Architecture overview** with component hierarchies and execution flows
@@ -64,6 +68,10 @@ Every AI agent needs an entry point—a comprehensive yet concise guide to the r
 This file is intentionally kept under 10% of the context window, leaving room for actual work while providing essential navigation.
 
 ### 2. Dynamic Context Loading Architecture
+
+**The Challenge**: AI context windows are precious real estate—even Claude's 200K token window can only hold about 1% of Tomcat's codebase. Loading everything upfront wastes this limited resource on information that might never be needed, leaving no room for actual work.
+
+**The Solution**: We architected a hierarchical documentation system that loads on demand. Think of it as lazy loading for AI knowledge—the agent starts with high-level navigation and progressively loads deeper documentation only when needed. This maximizes the working memory available for the actual task at hand.
 
 The breakthrough insight: **Not all documentation needs to be loaded at once.**
 
@@ -87,6 +95,10 @@ Each file is designed to be:
 
 ### 3. Sub-Agent Orchestration
 
+**The Challenge**: Complex tasks like "analyze all security vulnerabilities" or "refactor the authentication system" require examining hundreds of files—far exceeding what a single AI context can handle. Traditional approaches either fail or produce shallow, incomplete results.
+
+**The Solution**: We implemented a multi-agent architecture where specialized sub-agents handle focused research tasks, saving their findings to files that the main agent can read. It's like having a research team where each member investigates a specific aspect and reports back with synthesized findings. This allows us to tackle enterprise-scale problems that would otherwise be impossible.
+
 Complex tasks exceed single context windows. Our solution: **Specialized sub-agents with focused responsibilities.**
 
 #### Available Agents (`.claude/agents/`)
@@ -108,7 +120,9 @@ This pattern prevents context overflow while maintaining continuity.
 
 ### 4. Persistent Knowledge Management
 
-AI interactions are typically ephemeral, with knowledge lost between sessions. Our approach addresses this through persistent knowledge management where interactions contribute to a growing knowledge base.
+**The Challenge**: Every AI session starts from zero. The agent might solve the same problem differently each time, forget project-specific conventions, or lose valuable insights discovered in previous sessions. This wastes time and creates inconsistency.
+
+**The Solution**: We built a persistent knowledge layer where every interaction contributes to a growing knowledge base. Research findings, discovered patterns, and project decisions are saved as markdown files that future sessions can reference. The AI literally learns from its past experiences, getting smarter with every interaction. This transforms one-off AI assistance into a continuously improving development partner.
 
 #### Knowledge Layers
 - **CLAUDE.md**: Core operational knowledge
@@ -134,7 +148,9 @@ This ensures the AI assistant gets smarter with every interaction.
 
 ### 5. MCP Server Integration
 
-External knowledge sources extend capabilities without consuming context:
+**The Challenge**: Documentation, API references, and best practices are scattered across the internet. Loading all potentially useful information into the context window is impossible, yet the AI needs access to authoritative sources to make informed decisions.
+
+**The Solution**: We integrated Model Context Protocol (MCP) servers that provide on-demand access to external knowledge sources. When the AI needs specific Tomcat documentation or API details, it queries the MCP server and receives just the relevant information. This extends the AI's knowledge reach without consuming precious context tokens—like having a library card instead of carrying all the books.
 
 - **Context7 Server**: Access to 31,279 Tomcat documentation snippets
 - **Library ID**: `/websites/tomcat_apache_tomcat-10_1-doc`
@@ -144,7 +160,9 @@ This provides authoritative information without storing it locally.
 
 ### 6. Custom Commands for Standardization
 
-Shared commands ensure consistency across team members:
+**The Challenge**: Every developer (and AI agent) might approach common tasks differently—starting Tomcat, running tests, or updating documentation. This creates inconsistency, repeated mistakes, and wasted time figuring out project-specific workflows.
+
+**The Solution**: We created custom commands that encapsulate complex, project-specific workflows into simple, memorable commands. These aren't just aliases—they include error handling, environment detection, and best practices baked in. When an AI agent runs `/start-tomcat`, it automatically handles JAVA_HOME detection, port conflicts, and platform differences. This ensures every team member—human or AI—follows the same proven workflows.
 
 #### Available Commands (`.claude/commands/`)
 - **/improve-yourself**: Captures session learning into documentation
@@ -560,23 +578,6 @@ export JAVA_HOME=~/.sdkman/candidates/java/current
 - AI-driven architecture evolution
 - Automated refactoring campaigns
 - Self-optimizing codebase structure
-
-## Challenges and Solutions
-
-### Challenge: Context Window Limitations
-**Solution**: Hierarchical documentation with dynamic loading
-
-### Challenge: Knowledge Persistence
-**Solution**: File-based research reports and session contexts
-
-### Challenge: Code-Documentation Drift
-**Solution**: Integrated documentation updates with every commit
-
-### Challenge: AI Hallucinations
-**Solution**: Pattern validation against existing code
-
-### Challenge: Team Adoption
-**Solution**: Standardized commands and workflows
 
 ## Contributing to AI-Native Development
 
