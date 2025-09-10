@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "context7",
+      "args": [],
+      "env": {},
+      "description": "Context7 MCP server for Apache Tomcat documentation access"
+    }
+  },
+  "autoApprove": [
+    "context7"
+  ],
+  "description": "MCP Configuration for Apache Tomcat AI-First Development",
+  "settings": {
+    "defaultTimeout": 30000,
+    "retryAttempts": 3,
+    "contextManagement": {
+      "maxTokensPerServer": 50000,
+      "priorityServers": ["context7"]
+    }
+  }
+}

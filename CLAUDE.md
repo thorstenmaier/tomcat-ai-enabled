@@ -228,6 +228,20 @@ Please read this file for complete findings before proceeding.
 Summary: [1-2 sentence key findings]
 ```
 
+### Claude Code Workflow Commands
+
+#### Available Commands (`.claude/commands/`)
+- **`/improve-yourself`**: Captures session learnings into documentation
+- **`/start-tomcat`**: Environment-aware Tomcat startup with automatic Java detection
+- **`/explore-plan-code-commit`**: Structured development workflow (Explore → Plan → Code → Commit)
+- **`/tdd-workflow`**: Test-driven development cycle (Red → Green → Refactor)
+
+#### Context Management Best Practices
+- **Use `/clear`** to reset context when it becomes cluttered
+- **Multiple CLAUDE.md files**: Place specialized CLAUDE.md in subdirectories for context-specific guidance
+- **Git worktrees** for parallel tasks: `git worktree add ../tomcat-feature feature-branch`
+- **Thinking modes**: Use "think", "think hard", or "ultrathink" for complex problems
+
 ### Self-Improvement Protocol
 
 #### Automated Self-Improvement Command

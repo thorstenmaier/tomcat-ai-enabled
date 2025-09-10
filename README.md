@@ -579,6 +579,86 @@ export JAVA_HOME=~/.sdkman/candidates/java/current
 - Automated refactoring campaigns
 - Self-optimizing codebase structure
 
+## Claude Code Best Practices Implementation
+
+This project follows [Anthropic's Claude Code best practices](https://www.anthropic.com/engineering/claude-code-best-practices) with the following implementations:
+
+### ✅ Implemented Best Practices
+
+1. **CLAUDE.md Documentation**
+   - Comprehensive project overview and commands
+   - Build instructions and troubleshooting
+   - Architecture documentation
+   - Self-improvement protocols
+
+2. **Custom Commands** (`.claude/commands/`)
+   - `/improve-yourself` - Captures session learnings
+   - `/start-tomcat` - Environment-aware startup
+   - `/explore-plan-code-commit` - Structured development workflow
+   - `/tdd-workflow` - Test-driven development cycle
+
+3. **Multi-Agent Architecture**
+   - Research context optimizer for deep analysis
+   - Test orchestrator for intelligent test selection
+   - Dependency analyzer for impact assessment
+   - Code validator for quality assurance
+
+4. **MCP Server Integration**
+   - `.mcp.json` configuration for Context7 documentation access
+   - 31,279+ Tomcat documentation snippets available
+   - Query-based retrieval without context pollution
+
+5. **Context Management Strategies**
+   - Dynamic documentation loading
+   - Hierarchical documentation structure
+   - Session persistence in `docs/claude/`
+   - Research reports for context recycling
+
+### 🚀 Advanced Workflows
+
+#### Explore-Plan-Code-Commit Workflow
+```bash
+/explore-plan-code-commit "Implement new feature"
+# 1. EXPLORE: Research existing patterns
+# 2. PLAN: Design implementation approach  
+# 3. CODE: Implement following patterns
+# 4. COMMIT: Validate and document changes
+```
+
+#### Test-Driven Development
+```bash
+/tdd-workflow "Add new functionality"
+# RED → GREEN → REFACTOR cycle
+```
+
+### 💡 Context Optimization Tips
+
+1. **Use `/clear` regularly** to reset context window
+2. **Multiple CLAUDE.md files** can be placed in subdirectories for specialized contexts
+3. **Git worktrees** for parallel task management:
+   ```bash
+   git worktree add ../tomcat-feature-x feature-branch
+   ```
+4. **Thinking modes** for complex problems:
+   - Normal: Standard processing
+   - "think": Deeper analysis
+   - "think hard": Complex problem solving
+   - "ultrathink": Maximum reasoning depth
+
+### 🔄 Context Reset Strategies
+
+When context becomes cluttered:
+1. Save current findings to `docs/claude/research/`
+2. Use `/clear` to reset
+3. Reload only essential documentation
+4. Reference saved research reports
+
+### 📊 Visual Iteration
+For UI/UX work, use screenshots:
+- Provide visual references for desired outcomes
+- Iterate on implementations with visual feedback
+- Document visual requirements in issues
+
 ## Contributing to AI-First Development
 
 This repository is a living experiment. Contributions welcome in:
