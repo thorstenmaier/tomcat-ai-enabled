@@ -1,4 +1,4 @@
-# The AI-Native Codebase: Apache Tomcat as Living Laboratory
+# The AI-First Codebase: Apache Tomcat as Living Laboratory
 
 ## Vision: The Future of Software Development
 
@@ -38,7 +38,7 @@ This isn't translation—it's dynamic generation from deep understanding.
 
 ## What This Repository Represents
 
-This is Apache Tomcat 12.0—but transformed. It's not just a web server; it's a **proof of concept for AI-native software development**. With ~726,745 lines of code across 2,732 Java files, Tomcat represents the complexity of real-world enterprise software. We've augmented it with AI-enabling infrastructure that demonstrates how brownfield projects can evolve into AI-collaborative environments.
+This is Apache Tomcat 12.0—but transformed. It's not just a web server; it's a **proof of concept for AI-First software development**. With ~726,745 lines of code across 2,732 Java files, Tomcat represents the complexity of real-world enterprise software. We've augmented it with AI-enabling infrastructure that demonstrates how brownfield projects can evolve into AI-collaborative environments.
 
 ### The Transformation Journey
 
@@ -187,7 +187,7 @@ This repository demonstrates a radical solution: **Architecture as Code, Living 
 - **Pattern Violations**: No automated enforcement of architectural patterns
 - **Impact Blindness**: Changes happen without understanding architectural implications
 
-#### The AI-Native Solution (Now)
+#### The AI-First Solution (Now)
 - **Single Source of Truth**: Architecture documentation lives in the repository, versioned with code
 - **Continuous Validation**: Every commit validates against architectural constraints
 - **Living Documentation**: AI agents update architecture docs with every structural change
@@ -215,7 +215,7 @@ This isn't just documentation—it's **active architectural governance**.
 
 ### Documentation as Living Architecture
 
-The AI-native documentation approach fundamentally changes how architecture is communicated:
+The AI-First documentation approach fundamentally changes how architecture is communicated:
 
 **Traditional Architecture Documentation:**
 - Static diagrams that become obsolete
@@ -319,7 +319,7 @@ AI Agent:
 
 ### The Enterprise Architecture Lifecycle
 
-With AI-native development, the architecture lifecycle transforms:
+With AI-First development, the architecture lifecycle transforms:
 
 #### Planning Phase
 - AI agents analyze existing architecture before changes
@@ -354,7 +354,7 @@ The AI agent continuously monitors:
 
 ### Enterprise Integration Patterns
 
-The AI-native approach integrates with enterprise processes:
+The AI-First approach integrates with enterprise processes:
 
 #### Architecture Review Boards (ARB)
 - AI pre-validates submissions against architectural standards
@@ -562,7 +562,7 @@ export JAVA_HOME=~/.sdkman/candidates/java/current
 4. **Ensure documentation updates** are accurate
 5. **Contribute patterns** back to the documentation
 
-## The Evolution Path: From Traditional to AI-Native
+## The Evolution Path: From Traditional to AI-First
 
 ### Stage 1: Documentation Enhancement (Current)
 - Comprehensive documentation for AI navigation
@@ -579,7 +579,7 @@ export JAVA_HOME=~/.sdkman/candidates/java/current
 - Automated refactoring campaigns
 - Self-optimizing codebase structure
 
-## Contributing to AI-Native Development
+## Contributing to AI-First Development
 
 This repository is a living experiment. Contributions welcome in:
 
@@ -618,7 +618,7 @@ This is not a complete solution but rather a working example of how traditional 
 ## License and Attribution
 
 - **Apache Tomcat Source**: [Apache License version 2](https://www.apache.org/licenses/)
-- **AI-Enablement Layer**: Experimental additions for AI-native development research
+- **AI-Enablement Layer**: Experimental additions for AI-First development research
 - **Original Project**: [Apache Software Foundation](https://tomcat.apache.org/)
 
 Apache Tomcat, Tomcat, Apache, the Apache feather, and the Apache Tomcat project logo are trademarks of the Apache Software Foundation.
