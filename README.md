@@ -171,6 +171,188 @@ This provides authoritative information without storing it locally.
 
 These commands encapsulate complex workflows that would otherwise require manual documentation lookup.
 
+### 7. Foundation-First Documentation Integrity
+
+**The Challenge**: Documentation hierarchies are often built top-down—starting with high-level architecture diagrams and working down to implementation details. This creates a critical problem: meta documentation (architectural overviews, system diagrams, API summaries) becomes disconnected from the actual code it describes. When inline comments are outdated or missing, any meta documentation built on top of them inherits and amplifies these inaccuracies. The result is a documentation pyramid built on sand.
+
+**The Solution**: We enforce a **bottom-up documentation discipline** where truth flows from implementation to abstraction, never the reverse. The `/sync-comments` command embodies this principle by ensuring inline documentation accurately reflects actual code behavior before allowing any meta documentation generation.
+
+#### The Documentation Pyramid
+
+```
+┌─────────────────────────────────────────┐
+│   Architecture Documentation           │  ← Generated from verified facts
+│   (System diagrams, component maps)    │
+├─────────────────────────────────────────┤
+│   Domain Documentation                  │  ← Synthesized from class summaries
+│   (Functional area overviews)          │
+├─────────────────────────────────────────┤
+│   Class/API Documentation               │  ← Derived from inline comments
+│   (Public interfaces, usage guides)    │
+├─────────────────────────────────────────┤
+│   Inline Comments & Javadoc            │  ← Must match implementation
+│   (Method docs, field descriptions)    │
+└─────────────────────────────────────────┘
+         ↑
+    CODE (Source of Truth)
+```
+
+**The Principle**: Code is reality. Comments interpret reality. Meta documentation synthesizes interpretations. If the interpretation is wrong, everything above it is wrong.
+
+#### How Foundation-First Works in Practice
+
+**Traditional (Broken) Workflow:**
+```
+1. Developer changes implementation
+2. Forgets to update inline comments
+3. Architect updates high-level docs based on outdated comments
+4. Documentation pyramid collapses into fiction
+```
+
+**Foundation-First (Correct) Workflow:**
+```
+1. Developer changes implementation
+2. /sync-comments verifies inline comments match code
+3. Inline comments updated to reflect actual behavior
+4. Meta documentation generated from verified inline comments
+5. Documentation pyramid stands on solid foundation
+```
+
+#### The Truth Propagation Chain
+
+Every layer of documentation must derive its truth from the layer below:
+
+1. **Implementation Layer** (Ground Truth)
+   - What the code actually does
+   - Verifiable through execution and testing
+   - The only source of absolute truth
+
+2. **Inline Documentation Layer** (Direct Interpretation)
+   - `/sync-comments` ensures comments match implementation
+   - Describes behavior, parameters, exceptions, side effects
+   - Must be validated before use in meta documentation
+
+3. **Class/API Layer** (Synthesis)
+   - Summarizes inline documentation across methods
+   - Explains public contracts and usage patterns
+   - Generated only after inline docs are verified
+
+4. **Domain/Architecture Layer** (Abstraction)
+   - Synthesizes patterns across multiple classes
+   - Documents component interactions and design decisions
+   - Built from verified class-level documentation
+
+#### Why This Matters
+
+**Scenario: Outdated Inline Comments Lead to Architectural Misconceptions**
+
+```java
+// Inline comment says:
+/**
+ * Processes requests synchronously in the calling thread.
+ * Thread-safe due to synchronized access.
+ */
+public void processRequest(Request req) {
+    // But actual implementation:
+    executorService.submit(() -> asyncProcessor.handle(req));
+}
+```
+
+If meta documentation is generated from this outdated comment:
+- Architecture docs claim synchronous processing
+- Performance analysis assumes blocking behavior
+- Thread pool sizing recommendations are wrong
+- Security model assumes synchronous call chains
+
+**After /sync-comments:**
+```java
+/**
+ * Processes requests asynchronously using the shared executor service.
+ *
+ * Submissions are non-blocking; actual processing occurs in worker threads
+ * from the configured thread pool. Caller receives immediate return.
+ * Thread-safety is ensured through the executor's internal synchronization.
+ *
+ * @param req the request to process asynchronously
+ * @see #executorService configured via setExecutorService()
+ */
+public void processRequest(Request req) {
+    executorService.submit(() -> asyncProcessor.handle(req));
+}
+```
+
+Now meta documentation correctly describes:
+- Asynchronous architecture
+- Non-blocking request handling
+- Thread pool resource management
+- Accurate performance characteristics
+
+#### Integration with Development Workflow
+
+The `/sync-comments` command enforces foundation-first discipline at critical points:
+
+**Before Pull Requests:**
+```bash
+# Ensure all changed classes have accurate inline documentation
+/sync-comments java/org/apache/catalina/core/ChangedClass.java
+# Only then generate PR description from verified documentation
+```
+
+**Before Meta Documentation Updates:**
+```bash
+# Step 1: Verify foundation
+/sync-comments java/org/apache/catalina/connector/Connector.java --generate-meta
+# Step 2: Meta docs are now generated from truth
+# Step 3: Update architectural overviews if needed
+```
+
+**During Refactoring:**
+```bash
+# After implementation changes
+/sync-comments path/to/refactored/Class.java
+# Ensures documentation reflects new reality
+# Prevents documentation debt accumulation
+```
+
+#### The Compound Effect
+
+When every layer of documentation is built on verified truth from the layer below:
+
+- **Accuracy Compounds**: Each layer inherits correctness from its foundation
+- **Trust Increases**: Developers and AI agents rely on documentation with confidence
+- **Maintenance Simplifies**: Fixing documentation means fixing the lowest incorrect layer
+- **AI Effectiveness Multiplies**: AI agents working from accurate documentation make better decisions
+
+#### The Anti-Pattern: Top-Down Documentation Decay
+
+Without foundation-first discipline:
+```
+Time 0:  All documentation accurate ✓
+Month 1: Inline comments drift (10% outdated)
+Month 3: API docs inherit inaccuracies (30% wrong)
+Month 6: Architecture docs describe fiction (60% misleading)
+Year 1:  Documentation is actively harmful ✗
+```
+
+With foundation-first discipline:
+```
+Every Change: /sync-comments enforces accuracy
+Every Layer:   Built on verified foundation
+Every Session: AI agents trust documentation
+Every Year:    Documentation remains useful
+```
+
+#### Foundation-First as Cultural Practice
+
+This isn't just a technical practice—it's a cultural commitment to **truth over convenience**:
+
+- **Code is truth**: When documentation conflicts with implementation, code wins
+- **Verify before synthesize**: Never build abstractions on unverified facts
+- **Bottom-up validation**: Always check foundations before constructing higher layers
+- **Continuous reconciliation**: Documentation drift is technical debt that compounds
+
+The `/sync-comments` command automates this cultural practice, making foundation-first documentation the path of least resistance rather than a heroic discipline.
+
 ## The Enterprise Architecture Revolution
 
 ### Solving the Architecture-Implementation Gap
