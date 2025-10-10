@@ -167,6 +167,7 @@ This provides authoritative information without storing it locally.
 #### Available Commands (`.claude/commands/`)
 - **/improve-yourself**: Captures session learning into documentation
 - **/start-tomcat**: Handles environment detection, port conflicts, Java configuration
+- **/sync-comments**: Synchronizes inline comments with implementation before generating meta documentation
 
 These commands encapsulate complex workflows that would otherwise require manual documentation lookup.
 
@@ -596,6 +597,7 @@ This project follows [Anthropic's Claude Code best practices](https://www.anthro
    - `/start-tomcat` - Environment-aware startup
    - `/explore-plan-code-commit` - Structured development workflow
    - `/tdd-workflow` - Test-driven development cycle
+   - `/sync-comments` - Synchronizes inline comments with implementation
 
 3. **Multi-Agent Architecture**
    - Research context optimizer for deep analysis

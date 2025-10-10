@@ -235,6 +235,7 @@ Summary: [1-2 sentence key findings]
 - **`/start-tomcat`**: Environment-aware Tomcat startup with automatic Java detection
 - **`/explore-plan-code-commit`**: Structured development workflow (Explore → Plan → Code → Commit)
 - **`/tdd-workflow`**: Test-driven development cycle (Red → Green → Refactor)
+- **`/sync-comments`**: Synchronizes inline comments with implementation before generating meta documentation
 
 #### Context Management Best Practices
 - **Use `/clear`** to reset context when it becomes cluttered
