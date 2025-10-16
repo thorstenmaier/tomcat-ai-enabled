@@ -16,25 +16,201 @@
 - JProfiler/YourKit (for performance analysis)
 ```
 
-### Initial Setup
+### First-Time Setup (Complete Walkthrough)
+
+This section walks you through setting up Tomcat from scratch, including installing all prerequisites.
+
+#### Step 1: Install Java Development Kit
+
+**Check existing Java installation:**
 ```bash
-# Clone repository
+java -version
+```
+
+**macOS - Find Java installations:**
+```bash
+# List all installed JDKs
+/usr/libexec/java_home -V
+
+# Get path to default JDK
+/usr/libexec/java_home
+```
+
+**Install Java if needed:**
+- **macOS**: Download from [Microsoft OpenJDK](https://learn.microsoft.com/en-us/java/openjdk/download) or use Homebrew: `brew install openjdk@21`
+- **Linux**: `sudo apt install openjdk-21-jdk` (Ubuntu/Debian) or `sudo yum install java-21-openjdk-devel` (RHEL/CentOS)
+- **Windows**: Download from [Microsoft OpenJDK](https://learn.microsoft.com/en-us/java/openjdk/download) or [Oracle](https://www.oracle.com/java/technologies/downloads/)
+
+#### Step 2: Install Apache Ant
+
+**Check if Ant is installed:**
+```bash
+ant -version
+```
+
+**Install Ant:**
+- **macOS**: `brew install ant`
+- **Linux**: `sudo apt install ant` (Ubuntu/Debian) or `sudo yum install ant` (RHEL/CentOS)
+- **Windows**: Download from [Apache Ant website](https://ant.apache.org/bindownload.cgi) and add to PATH
+
+**Verify installation:**
+```bash
+ant -version
+# Should show: Apache Ant(TM) version 1.10.15 or later
+```
+
+#### Step 3: Clone and Configure
+
+```bash
+# Clone repository (if not already cloned)
 git clone https://github.com/apache/tomcat.git
 cd tomcat
 
-# Set up build properties
+# Create build.properties from template
 cp build.properties.default build.properties
 
-# Edit build.properties - set base.path for dependencies
-base.path=/path/to/tomcat-build-libs
+# Edit build.properties to set base.path for dependencies
+# The base.path is where Ant will download and cache build dependencies
+echo "base.path=${HOME}/tomcat-build-libs" >> build.properties
+```
 
-# Download and build
-ant download-compile
+**What is base.path?**
+The `base.path` directory is where Ant downloads compile dependencies like servlet APIs, JUnit libraries, and other required JARs. This allows dependency caching across builds.
+
+#### Step 4: Build Tomcat
+
+```bash
+# Full build (creates working Tomcat instance in output/build/)
 ant deploy
+```
 
-# Verify build
-export JAVA_HOME=/path/to/jdk
+**What happens during `ant deploy`:**
+1. Downloads all compile dependencies to `base.path` directory
+2. Compiles ~1,750 Java source files
+3. Packages JARs and creates directory structure
+4. Copies configuration files to `output/build/`
+5. Creates a complete, runnable Tomcat instance
+
+**Build output location:** `output/build/` contains your built Tomcat server
+
+#### Step 5: Set JAVA_HOME and Start Tomcat
+
+**Find correct JAVA_HOME:**
+```bash
+# macOS - Using java_home utility (recommended)
+export JAVA_HOME=$(/usr/libexec/java_home)
+echo $JAVA_HOME
+
+# macOS - If using SDKMAN
+export JAVA_HOME=$HOME/.sdkman/candidates/java/current
+
+# Linux - Find Java installation
+export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
+
+# Windows (PowerShell)
+# Usually: C:\Program Files\Java\jdk-21
+$env:JAVA_HOME = "C:\Program Files\Java\jdk-21"
+```
+
+**Check for port conflicts:**
+```bash
+# Check if port 8080 is already in use
+lsof -i :8080
+
+# If occupied, kill the process
+kill <PID>
+
+# Or change the port in conf/server.xml before starting
+```
+
+**Start Tomcat:**
+```bash
+# Unix/Linux/macOS
 ./output/build/bin/catalina.sh run
+
+# Windows
+output\build\bin\catalina.bat run
+```
+
+**Verify startup:**
+- Watch console output for "Server startup in [X] milliseconds"
+- Open browser to: http://localhost:8080
+- You should see the Tomcat welcome page
+
+**Available URLs after startup:**
+- Main page: http://localhost:8080
+- Examples: http://localhost:8080/examples
+- Documentation: http://localhost:8080/docs
+- Manager: http://localhost:8080/manager (requires user configuration)
+
+**Logs location:**
+- Main log: `output/build/logs/catalina.out`
+- Other logs: `output/build/logs/`
+
+### Quick Setup (If Dependencies Already Installed)
+
+If you already have Java and Ant installed:
+
+```bash
+# Clone and setup
+git clone https://github.com/apache/tomcat.git
+cd tomcat
+cp build.properties.default build.properties
+echo "base.path=${HOME}/tomcat-build-libs" >> build.properties
+
+# Build and run (one-liner)
+ant deploy && export JAVA_HOME=$(/usr/libexec/java_home) && ./output/build/bin/catalina.sh run
+```
+
+### Troubleshooting First-Time Setup
+
+**Problem: "ant: command not found"**
+- Solution: Install Apache Ant (see Step 2 above)
+- On macOS with Homebrew: `brew install ant`
+
+**Problem: "JAVA_HOME is not defined correctly"**
+```bash
+# Verify Java installation
+java -version
+
+# Find correct JAVA_HOME
+/usr/libexec/java_home -V  # macOS
+which java                  # Linux/macOS
+
+# Set JAVA_HOME correctly (macOS)
+export JAVA_HOME=$(/usr/libexec/java_home)
+
+# Verify it points to JDK, not JRE
+ls $JAVA_HOME/bin/javac  # Should exist for JDK
+```
+
+**Problem: "Port 8080 already in use"**
+```bash
+# Find process using port 8080
+lsof -i :8080
+
+# Kill the process
+kill <PID>
+
+# Or check for both Tomcat ports
+lsof -i :8080 -i :8005 | grep LISTEN
+```
+
+**Problem: "Build fails with download errors"**
+- Check internet connection
+- Verify proxy settings in build.properties if behind corporate proxy:
+```properties
+proxy.host=proxy.example.com
+proxy.port=8080
+proxy.user=username
+proxy.password=password
+```
+
+**Problem: "OutOfMemoryError during build"**
+```bash
+# Increase Ant memory
+export ANT_OPTS="-Xmx1024m"
+ant deploy
 ```
 
 ### IDE Configuration

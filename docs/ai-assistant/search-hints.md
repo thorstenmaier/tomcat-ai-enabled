@@ -12,10 +12,18 @@
 
 ### Session Management
 - **"session"** → `java/org/apache/catalina/session/`, `StandardManager.java`, `PersistentManager.java`
-- **"session replication"** → `java/org/apache/catalina/ha/session/`, `DeltaManager.java`
-- **"session clustering"** → `java/org/apache/catalina/tribes/`, `SimpleTcpCluster.java`
-- **"session timeout"** → `StandardSession.java`, `SessionConfig.java`
-- **"session persistence"** → `StoreBase.java`, `FileStore.java`, `JDBCStore.java`
+- **"session interfaces"** → `Session.java`, `Manager.java`, `Store.java`, `SessionIdGenerator.java`
+- **"session implementations"** → `StandardSession.java`, `StandardSessionFacade.java`, `StandardSessionAccessor.java`
+- **"session managers"** → `ManagerBase.java`, `StandardManager.java`, `PersistentManagerBase.java`, `PersistentManager.java`
+- **"session replication"** → `java/org/apache/catalina/ha/session/`, `DeltaManager.java`, `DeltaSession.java`
+- **"session clustering"** → `ClusterManager.java`, `ClusterSession.java`, `BackupManager.java`, `DistributedManager.java`
+- **"session persistence"** → `StoreBase.java`, `FileStore.java`, `DataSourceStore.java`
+- **"session timeout"** → `StandardSession.java`, `SessionConfig.java`, `ManagerBase.backgroundProcess()`
+- **"session validation"** → `SessionListener.java`, `SessionEvent.java`, expiration in managers
+- **"session ID generation"** → `SessionIdGeneratorBase.java`, `StandardSessionIdGenerator.java`
+- **"session listeners"** → `ClusterSessionListener.java`, `ReplicatedSessionListener.java`, `SingleSignOnListener.java`
+- **"session messages"** → `SessionMessage.java`, `SessionMessageImpl.java` (clustering)
+- **"session utilities"** → `SessionUtils.java`, `CrawlerSessionManagerValve.java`, `SessionInitializerFilter.java`
 
 ### Request Processing
 - **"request processing"** → `java/org/apache/catalina/connector/`, `CoyoteAdapter.java`
@@ -137,8 +145,8 @@
 **Examples**: `BasicAuthenticator.java`, `FormAuthenticator.java`
 
 ### "How to implement session clustering?"
-**Start with**: `ClusterManager.java`, `DeltaManager.java`  
-**Related**: `SimpleTcpCluster.java`, tribes package
+**Start with**: `ClusterManager.java`, `DeltaManager.java`
+**Related**: `SimpleTcpCluster.java`, `DeltaSession.java`, `SessionMessage.java`, tribes package
 
 ### "How to add custom valve?"
 **Start with**: `ValveBase.java`  
@@ -179,8 +187,8 @@
 # Authentication code
 find java/ -name "*uth*" -o -name "*Realm*"
 
-# Session management  
-find java/ -name "*ession*" -o -name "*anager*"
+# Session management
+find java/ -name "*ession*" -o -name "*anager*" -o -name "*Store*"
 
 # WebSocket
 find java/ -path "*/websocket/*" -name "*.java"
@@ -202,4 +210,10 @@ rg "authenticate|login|principal" java/
 
 # Find async handling
 rg "AsyncContext|startAsync" java/
+
+# Find session classes
+rg "class.*Session|interface.*Session" java/
+
+# Find session management patterns
+rg "Manager.*Session|Session.*Manager" java/
 ```

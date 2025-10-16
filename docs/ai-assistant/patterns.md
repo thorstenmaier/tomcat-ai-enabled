@@ -211,45 +211,220 @@ public class MyAuthenticator extends AuthenticatorBase {
 
 **Files**: `BasicAuthenticator.java`, `DigestAuthenticator.java`, `FormAuthenticator.java`
 
-## Session Management Pattern
+## Session Management Patterns
+
+### Core Session Interface Implementation
+```java
+public class MySession implements Session {
+
+    protected Manager manager;
+    protected String id;
+    protected Map<String, Object> attributes = new ConcurrentHashMap<>();
+    protected long creationTime;
+    protected long lastAccessedTime;
+    protected int maxInactiveInterval;
+    protected boolean isValid = true;
+
+    @Override
+    public Object getAttribute(String name) {
+        if (!isValidInternal()) {
+            throw new IllegalStateException("getAttribute: Session already invalidated");
+        }
+        return attributes.get(name);
+    }
+
+    @Override
+    public void setAttribute(String name, Object value) {
+        if (!isValidInternal()) {
+            throw new IllegalStateException("setAttribute: Session already invalidated");
+        }
+
+        // Fire session binding events
+        if (value != null && value instanceof HttpSessionBindingListener) {
+            ((HttpSessionBindingListener) value).valueBound(
+                new HttpSessionBindingEvent(this, name, value));
+        }
+
+        Object oldValue = attributes.put(name, value);
+
+        // Fire attribute replacement events
+        if (oldValue != null && manager.getNotifyAttributeListenerOnUnchangedValue()) {
+            fireSessionEvent(Session.SESSION_ATTRIBUTE_REPLACED_EVENT, name);
+        }
+    }
+}
+```
+
+### Session Manager Pattern
+```java
+public class MySessionManager extends ManagerBase {
+
+    protected Map<String, Session> sessions = new ConcurrentHashMap<>();
+
+    @Override
+    public void add(Session session) {
+        sessions.put(session.getIdInternal(), session);
+        sessionCounter++;
+
+        int size = getActiveSessions();
+        if (size > maxActive) {
+            maxActive = size;
+        }
+    }
+
+    @Override
+    public Session findSession(String id) throws IOException {
+        if (id == null) {
+            return null;
+        }
+
+        Session session = sessions.get(id);
+        if (session != null && !session.isValid()) {
+            // Session expired, remove it
+            remove(session, false);
+            session = null;
+        }
+        return session;
+    }
+
+    @Override
+    public void backgroundProcess() {
+        // Process expired sessions
+        processExpires();
+    }
+
+    protected void processExpires() {
+        long timeNow = System.currentTimeMillis();
+        Session[] sessions = findSessions();
+
+        for (Session session : sessions) {
+            if (session != null && !session.isValid()) {
+                continue;
+            }
+
+            int timeIdle = (int) ((timeNow - session.getThisAccessedTime()) / 1000L);
+            if (timeIdle >= session.getMaxInactiveInterval()) {
+                try {
+                    session.expire();
+                } catch (Throwable t) {
+                    log.warn("Session expiration error", t);
+                }
+            }
+        }
+    }
+}
+```
 
 ### Session Store Implementation
 ```java
 public class MyStore extends StoreBase {
-    
     @Override
     public void save(Session session) throws IOException {
+        if (manager.getContext().getLogger().isDebugEnabled()) {
+            manager.getContext().getLogger().debug("Saving session " + session.getId());
+        }
+
         try {
             // Serialize session
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             ((StandardSession) session).writeObjectData(oos);
             oos.close();
-            
-            // Store bytes
+
+            // Store bytes with atomic operation
             storeSessionData(session.getId(), baos.toByteArray());
-            
         } catch (IOException e) {
             manager.getContext().getLogger().error(
                 "Failed to save session " + session.getId(), e);
             throw e;
         }
     }
-    
+
     @Override
     public Session load(String id) throws IOException, ClassNotFoundException {
+        if (manager.getContext().getLogger().isDebugEnabled()) {
+            manager.getContext().getLogger().debug("Loading session " + id);
+        }
+
         byte[] data = loadSessionData(id);
         if (data == null) {
             return null;
         }
-        
+
         ByteArrayInputStream bais = new ByteArrayInputStream(data);
-        ObjectInputStream ois = new ObjectInputStream(bais);
-        StandardSession session = (StandardSession) manager.createEmptySession();
-        session.readObjectData(ois);
-        session.setManager(manager);
-        
-        return session;
+        ClassLoader oldThreadContextCL = Thread.currentThread().getContextClassLoader();
+
+        try {
+            ClassLoader classLoader = manager.getContext().getLoader().getClassLoader();
+            Thread.currentThread().setContextClassLoader(classLoader);
+
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            StandardSession session = (StandardSession) manager.createEmptySession();
+            session.readObjectData(ois);
+            session.setManager(manager);
+
+            return session;
+
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldThreadContextCL);
+        }
+    }
+
+    @Override
+    public String[] keys() throws IOException {
+        // Return all stored session IDs
+        return getStoredSessionIds();
+    }
+}
+```
+
+### Cluster Session Manager Pattern
+```java
+public class MyClusterManager extends ClusterManagerBase {
+
+    @Override
+    public ClusterMessage requestCompleted(String sessionId) {
+        Session session = findSession(sessionId);
+        if (session == null) {
+            return null;
+        }
+
+        DeltaRequest deltaRequest = null;
+        if (session instanceof DeltaSession) {
+            deltaRequest = ((DeltaSession) session).getDeltaRequest();
+        }
+
+        if (deltaRequest == null || deltaRequest.getSize() == 0) {
+            return null;
+        }
+
+        SessionMessage msg = new SessionMessageImpl(getName(),
+                SessionMessage.EVT_SESSION_DELTA,
+                deltaRequest.serialize(), sessionId);
+
+        // Reset delta for next request
+        ((DeltaSession) session).resetDeltaRequest();
+
+        return msg;
+    }
+
+    @Override
+    public void messageDataReceived(ClusterMessage msg) {
+        if (msg instanceof SessionMessage) {
+            SessionMessage sessionMsg = (SessionMessage) msg;
+
+            switch (sessionMsg.getEventType()) {
+                case SessionMessage.EVT_SESSION_CREATED:
+                    sessionCreated(sessionMsg.getSessionID(), sessionMsg.getSession());
+                    break;
+                case SessionMessage.EVT_SESSION_DELTA:
+                    sessionDeltaReceived(sessionMsg.getSessionID(), sessionMsg.getSession());
+                    break;
+                case SessionMessage.EVT_SESSION_EXPIRED:
+                    sessionExpired(sessionMsg.getSessionID());
+                    break;
+            }
+        }
     }
 }
 ```

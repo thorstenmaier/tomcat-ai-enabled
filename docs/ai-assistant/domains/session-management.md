@@ -12,21 +12,55 @@ Request → Session Manager → Session Store → Replication → Persistence
 
 ## Key Components
 
-### Session Managers
+### Core Session Interfaces
+- **`org.apache.catalina.Session`** - Main session interface defining session contract
+- **`org.apache.catalina.Manager`** - Session manager interface for lifecycle management
+- **`org.apache.catalina.Store`** - Session persistence interface for durability
+- **`org.apache.catalina.SessionIdGenerator`** - Session ID generation interface
+- **`org.apache.catalina.SessionListener`** - Session event listener interface
+- **`org.apache.catalina.SessionEvent`** - Session event class
+
+### Session Manager Implementations
+- **`ManagerBase`** - Base manager implementation with common functionality
 - **`StandardManager`** - In-memory session management (default)
+- **`PersistentManagerBase`** - Base for persistent managers
 - **`PersistentManager`** - Persistent session storage with swapping
-- **`DeltaManager`** - Cluster-aware session replication (all-to-all)
-- **`BackupManager`** - Cluster-aware session replication (primary-backup)
 
 ### Session Implementations
 - **`StandardSession`** - Standard HTTP session implementation
-- **`DeltaSession`** - Cluster-aware session with delta replication
-- **`PersistentSession`** - Swappable persistent session
+- **`StandardSessionFacade`** - Session facade for security isolation
+- **`StandardSessionAccessor`** - Session accessor for internal operations
+- **`DeltaSession`** - Cluster-aware session with delta replication (HA package)
 
-### Session Stores
-- **`FileStore`** - File system persistence
-- **`JDBCStore`** - Database persistence
+### Clustering & Distribution
+- **`ClusterManager`** - Cluster manager interface extending Manager
+- **`DistributedManager`** - Interface for distributed session managers
+- **`DeltaManager`** - Cluster-aware session replication (all-to-all)
+- **`BackupManager`** - Cluster-aware session replication (primary-backup)
+- **`ClusterSession`** - Cluster session interface
+- **`ClusterSessionListener`** - Cluster session event listener
+- **`ReplicatedSessionListener`** - Replication event listener
+
+### Session Stores & Persistence
 - **`StoreBase`** - Abstract base for custom stores
+- **`FileStore`** - File system persistence
+- **`DataSourceStore`** - Database persistence (replaces JDBCStore)
+
+### Session ID Management
+- **`SessionIdGeneratorBase`** - Base ID generator implementation
+- **`StandardSessionIdGenerator`** - Standard secure ID generator
+
+### Configuration & Utilities
+- **`SessionConfig`** - Session configuration utilities (catalina.util)
+- **`ApplicationSessionCookieConfig`** - Session cookie configuration
+- **`CrawlerSessionManagerValve`** - Bot/crawler session management
+- **`SessionInitializerFilter`** - Session initialization filter
+- **`SessionUtils`** - Session utility functions
+
+### Clustering Messages & Communication
+- **`SessionMessage`** - Session message interface for clustering
+- **`SessionMessageImpl`** - Session message implementation
+- **`SingleSignOnListener`** - SSO session coordination
 
 ## Session Lifecycle
 

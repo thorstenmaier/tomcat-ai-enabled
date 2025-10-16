@@ -61,28 +61,39 @@ ant ide-netbeans    # NetBeans
 
 ### Running Tomcat
 
-**Important**: On macOS with SDKMAN, JAVA_HOME must be set explicitly:
+**Important**: JAVA_HOME must be correctly set before starting Tomcat:
 
 ```bash
 # After building with 'ant deploy'
 
-# For macOS with SDKMAN-managed Java:
-export JAVA_HOME=/Users/$(whoami)/.sdkman/candidates/java/current
+# macOS - Recommended (detects system Java)
+export JAVA_HOME=$(/usr/libexec/java_home)
 ./output/build/bin/catalina.sh run
 
-# For systems with standard Java installation:
-./output/build/bin/catalina.sh run     # Unix/Linux/Mac
-output\build\bin\catalina.bat run      # Windows
+# macOS - Alternative for SDKMAN-managed Java
+export JAVA_HOME=$HOME/.sdkman/candidates/java/current
+./output/build/bin/catalina.sh run
 
-# Or set CATALINA_HOME and use scripts
+# Linux - Auto-detect Java installation
+export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
+./output/build/bin/catalina.sh run
+
+# Windows
+output\build\bin\catalina.bat run
+
+# Or set CATALINA_HOME and use startup scripts
 export CATALINA_HOME=./output/build
 $CATALINA_HOME/bin/startup.sh
 ```
 
 **Troubleshooting**:
-- If port 8080 is in use: `lsof -i :8080 | grep LISTEN` then `kill <PID>`
-- If JAVA_HOME not found: Check with `which java` and set JAVA_HOME to parent of bin directory
-- Default URL after startup: http://localhost:8080
+- **Port 8080 in use**: `lsof -i :8080 | grep LISTEN` then `kill <PID>`
+- **JAVA_HOME not found**:
+  - macOS: Use `/usr/libexec/java_home -V` to list installations, then `export JAVA_HOME=$(/usr/libexec/java_home)`
+  - Linux: Use `which java` to find Java, set JAVA_HOME to parent of bin directory
+  - Verify JDK (not JRE): `ls $JAVA_HOME/bin/javac` should exist
+- **Port 8005 in use** (shutdown port): Check with `lsof -i :8005`
+- **Default URL after startup**: http://localhost:8080
 
 ## Architecture
 
@@ -146,14 +157,22 @@ Runtime configuration:
 ## Knowledge Base for Future Sessions
 
 ### Environment-Specific Notes
-- **macOS with SDKMAN**: Java installations are typically at `~/.sdkman/candidates/java/current`, not detected by `/usr/libexec/java_home`
-- **Port conflicts**: Port 8080 and 8005 are commonly used; always check with `lsof` before starting
+- **macOS Java Detection**: Use `/usr/libexec/java_home` to find installed JDKs (preferred method)
+- **macOS with SDKMAN**: Java installations at `~/.sdkman/candidates/java/current` may not be detected by standard tools
+- **Multiple Java Installations**: macOS often has multiple Java versions; use `/usr/libexec/java_home -V` to list them
+- **Port conflicts**: Port 8080 (HTTP) and 8005 (shutdown) are commonly used; always check with `lsof` before starting
 - **Build output**: The built Tomcat instance is in `output/build/`, not in the root directory
+- **First-time setup**: Requires Apache Ant installation (via Homebrew on macOS: `brew install ant`)
 
 ### Common Tasks and Solutions
-1. **Quick rebuild and run**:
+1. **Quick rebuild and run (macOS)**:
    ```bash
-   ant clean deploy && export JAVA_HOME=~/.sdkman/candidates/java/current && ./output/build/bin/catalina.sh run
+   ant clean deploy && export JAVA_HOME=$(/usr/libexec/java_home) && ./output/build/bin/catalina.sh run
+   ```
+
+1a. **Quick rebuild and run (with SDKMAN)**:
+   ```bash
+   ant clean deploy && export JAVA_HOME=$HOME/.sdkman/candidates/java/current && ./output/build/bin/catalina.sh run
    ```
 
 2. **Finding and killing Tomcat processes**:
@@ -172,6 +191,37 @@ Runtime configuration:
 - The build system caches downloaded dependencies in `~/tomcat-build-libs/`
 - For faster builds, avoid `ant clean` unless necessary
 - Background Tomcat processes can be managed with process IDs from `lsof` output
+
+### Systematic Class Discovery Best Practices
+
+Based on session management discovery patterns, apply these systematic approaches:
+
+#### Multi-Layer Search Strategy
+1. **Start with Interfaces**: Search for core interfaces (`Session.java`, `Manager.java`, `Store.java`)
+2. **Find Implementations**: Use grep patterns like `class.*Session|interface.*Session`
+3. **Discover Related Components**: Search for `Manager.*Session|Session.*Manager`
+4. **Identify Storage/Persistence**: Look for `Store`, `Persist` patterns
+5. **Find Clustering Components**: Search in `ha/` packages for distributed implementations
+
+#### Effective Search Commands for Class Discovery
+```bash
+# Find all session-related classes
+rg "class.*Session|interface.*Session" java/ --files-with-matches
+
+# Find manager implementations
+rg "class.*Manager.*implements|interface.*Manager" java/ --files-with-matches
+
+# Find by file patterns
+find java/ -name "*ession*" -o -name "*anager*" -o -name "*Store*"
+
+#### Documentation Pattern for Class Discovery
+When documenting discovered classes, organize by:
+- **Core Interfaces** (foundational contracts)
+- **Manager Implementations** (lifecycle management)
+- **Session Implementations** (data containers)
+- **Storage/Persistence** (durability layer)
+- **Clustering/Replication** (distribution layer)
+- **Configuration/ Utilities** (supporting components)
 
 ### Agent Usage Best Practices
 
@@ -305,7 +355,8 @@ Server (org.apache.catalina.Server)
 | HTTP Protocol Handling | `java/org/apache/coyote/` |
 | JSP Compilation | `java/org/apache/jasper/` |
 | WebSocket Support | `java/org/apache/tomcat/websocket/` |
-| Session Replication | `java/org/apache/catalina/tribes/` |
+| Session Management | `java/org/apache/catalina/session/` |
+| Session Replication | `java/org/apache/catalina/ha/session/`, `java/org/apache/catalina/tribes/` |
 | Database Pooling | `java/org/apache/tomcat/jdbc/` |
 | Authentication | `java/org/apache/catalina/authenticator/` |
 | Security Realms | `java/org/apache/catalina/realm/` |
