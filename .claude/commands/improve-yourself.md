@@ -58,6 +58,11 @@ This command implements a comprehensive self-improvement protocol to ensure the 
    - Check that all new commands and processes are correctly documented
    - Ensure examples are accurate and complete
    - Validate that file paths and technical references are correct
+   - Avoid Pure Duplication: Ensure no duplicate documentation without added value
+     - Each file should have a distinct purpose and perspective
+     - Cross-references are preferred over copying content
+     - If similar information appears in multiple files, ensure each adds unique value
+     - Use links to refer to canonical sources rather than duplicating content
 
 9. **Self-Improvement Protocol Execution**: Document the improvement process itself
    - Record what types of insights were most valuable to capture
