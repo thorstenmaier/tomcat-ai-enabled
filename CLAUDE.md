@@ -213,6 +213,7 @@ rg "class.*Manager.*implements|interface.*Manager" java/ --files-with-matches
 
 # Find by file patterns
 find java/ -name "*ession*" -o -name "*anager*" -o -name "*Store*"
+```
 
 #### Documentation Pattern for Class Discovery
 When documenting discovered classes, organize by:
